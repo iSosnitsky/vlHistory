@@ -1,5 +1,7 @@
 package ru.vhistory.ikurbanov.dto;
 
+
+//For testing purposes. Please ignore
 public class SeriesChart {
     private String name;
     private int[] data;
