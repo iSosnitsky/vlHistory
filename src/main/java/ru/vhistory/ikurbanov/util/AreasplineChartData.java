@@ -20,44 +20,44 @@ public class AreasplineChartData {
     private List<Series> series;
 
 
-    public AreasplineChartData(ArrayList<String> users, ArrayList<String> actions, ArrayList<HistoryAction> historyActions, String generalizePeriod, Date periodBegin, Date periodEnd) throws ParseException{
+    public AreasplineChartData(ArrayList<String> users, ArrayList<String> actions, ArrayList<HistoryAction> historyActions, String generalizePeriod, Date periodBegin, Date periodEnd) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate startPeriod = LocalDate.parse(simpleDateFormat.format(periodBegin));
         LocalDate endPeriod = LocalDate.parse(simpleDateFormat.format(periodEnd));
         List<LocalDate> localDates = new ArrayList<>();
-        while (startPeriod.isBefore(endPeriod) ) {
+        while (startPeriod.isBefore(endPeriod)) {
             localDates.add(startPeriod);
             startPeriod = startPeriod.plusDays(1);
         }
 
 
-            List<String> allDatesInPeriod = localDates.stream().map((LocalDate x) -> {
-                try {
-                    return formatDate(simpleDateFormat.parse(x.toString()), generalizePeriod);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return "";
-                }
-            }).distinct().collect(Collectors.toList());
+        List<String> allDatesInPeriod = localDates.stream().map((LocalDate x) -> {
+            try {
+                return formatDate(simpleDateFormat.parse(x.toString()), generalizePeriod);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return "";
+            }
+        }).distinct().collect(Collectors.toList());
 
         Map<String, List<HistoryAction>> result = historyActions.stream()
-                .filter(x-> periodBegin.before(x.getTime()) && periodEnd.after(x.getTime()))
-                .filter(x-> actions.contains(x.getName()))
-                .filter(x-> users.contains(x.getUser()))
-        .collect(Collectors.groupingBy(historyAction -> formatDate(historyAction.getTime(), generalizePeriod)));
+                .filter(x -> periodBegin.before(x.getTime()) && periodEnd.after(x.getTime()))
+                .filter(x -> actions.contains(x.getName()))
+                .filter(x -> users.contains(x.getUser()))
+                .collect(Collectors.groupingBy(historyAction -> formatDate(historyAction.getTime(), generalizePeriod)));
 
-        Map<String,List<Integer>> mapSeries = new HashMap<String, List<Integer>>();
-        users.forEach(x-> mapSeries.put(x,new ArrayList<Integer>()));
+        Map<String, List<Integer>> mapSeries = new HashMap<String, List<Integer>>();
+        users.forEach(x -> mapSeries.put(x, new ArrayList<Integer>()));
 
 
-        for (String singleDate : allDatesInPeriod){
+        for (String singleDate : allDatesInPeriod) {
             categories.add(singleDate);
-            if (result.containsKey(singleDate)){
-                Map<String,List<HistoryAction>> usersToActionsInGenPeriod;
+            if (result.containsKey(singleDate)) {
+                Map<String, List<HistoryAction>> usersToActionsInGenPeriod;
                 usersToActionsInGenPeriod = result.get(singleDate).stream().collect(Collectors.groupingBy(HistoryAction::getUser));
-                users.forEach(x->{
-                    if(!usersToActionsInGenPeriod.containsKey(x)){
-                        usersToActionsInGenPeriod.put(x,new ArrayList<HistoryAction>());
+                users.forEach(x -> {
+                    if (!usersToActionsInGenPeriod.containsKey(x)) {
+                        usersToActionsInGenPeriod.put(x, new ArrayList<HistoryAction>());
                     }
                 });
                 for (Map.Entry<String, List<HistoryAction>> userToActionPair : usersToActionsInGenPeriod.entrySet()) {
@@ -66,7 +66,7 @@ public class AreasplineChartData {
                             .count()));
                 }
             } else {
-                users.forEach(x->{
+                users.forEach(x -> {
                     mapSeries.get(x).add(0);
                 });
             }
@@ -93,16 +93,16 @@ public class AreasplineChartData {
 //        }
 
 
-        List<Series> series= new ArrayList<>();
-        for (Map.Entry<String,List<Integer>> userToNumbers : mapSeries.entrySet()){
+        List<Series> series = new ArrayList<>();
+        for (Map.Entry<String, List<Integer>> userToNumbers : mapSeries.entrySet()) {
             series.add(new Series(userToNumbers.getKey(), userToNumbers.getValue()));
         }
         this.series = series;
     }
 
-    private String formatDate(Date date, String generalizePeriod){
-        String formattedDate ="";
-        switch (generalizePeriod){
+    private String formatDate(Date date, String generalizePeriod) {
+        String formattedDate = "";
+        switch (generalizePeriod) {
             case "day": {
                 SimpleDateFormat sdt = new SimpleDateFormat("dd-MM-yyyy");
                 formattedDate = sdt.format(date);
@@ -123,24 +123,23 @@ public class AreasplineChartData {
     }
 
 
-    private Date roundDate(Date date){
+    private Date roundDate(Date date) {
         //TODO: Округление до 5 секунд
-        return new Date(date.getTime()- (date.getTime()%5000));
+        return new Date(date.getTime() - (date.getTime() % 5000));
     }
 
-    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor)
-    {
+    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> map = new ConcurrentHashMap<>();
         return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     @Data
-    public class Series{
+    public class Series {
         private String name;
         private List<Integer> data;
 
         Series(String name, List<Integer> data) {
-            this.name=name;
+            this.name = name;
             this.data = data;
         }
     }
