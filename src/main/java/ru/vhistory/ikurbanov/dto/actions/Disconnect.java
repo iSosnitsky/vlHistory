@@ -1,5 +1,7 @@
 package ru.vhistory.ikurbanov.dto.actions;
 
+import lombok.Getter;
+import lombok.ToString;
 import ru.vhistory.ikurbanov.constant.State;
 
 import java.text.ParseException;
@@ -8,22 +10,32 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ToString
 public class Disconnect extends HistoryAction {
-    private final String name = "Disconnect";
-    private State state;
-    private String user;
-    private Date time;
-    private String disconnectionSubject;
-    private String disconnectionObject;
-    private String forUser;
     private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy H:m:s a");
     private final static Pattern p = Pattern.compile("history = disconnect (.*) (?:from|to) (.*)- user:(.+) time:(.+) state: (\\w*)(?:\\s*for user:(.+))?");
+
+    @Getter
+    private final String localizedName="Разъединение";
+    @Getter
+    private final String name = "Disconnect";
+    @Getter
+    private State state;
+    @Getter
+    private String user;
+    @Getter
+    private Date time;
+    @Getter
+    private String disconnectionSubject;
+    @Getter
+    private String disconnectionObject;
+    @Getter
+    private String forUser;
 
 
     public Disconnect (String parsableString) throws IllegalArgumentException {
         Matcher m = p.matcher(parsableString);
         if (m.matches()) {
-//            this.name = m.group(1);
             this.user = m.group(3).trim();
             this.state = State.valueOf(m.group(5).trim().toUpperCase());
             try {
@@ -45,38 +57,5 @@ public class Disconnect extends HistoryAction {
         } else {
             throw new IllegalArgumentException("Unable to map String: "+parsableString+" to object:"+ this.name);
         }
-
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
-    @Override
-    public String getUser() {
-        return user;
-    }
-
-    @Override
-    public Date getTime() {
-        return time;
-    }
-
-    public String getDisconnectionSubject() {
-        return disconnectionSubject;
-    }
-
-    public String getDisconnectionObject() {
-        return disconnectionObject;
-    }
-
-    public String getForUser() {
-        return forUser;
     }
 }

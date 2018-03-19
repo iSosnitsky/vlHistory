@@ -1,5 +1,7 @@
 package ru.vhistory.ikurbanov.dto.actions;
 
+import lombok.Getter;
+import lombok.ToString;
 import ru.vhistory.ikurbanov.constant.State;
 
 import java.text.ParseException;
@@ -8,15 +10,25 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ToString
 public class DeleteFile extends HistoryAction {
     private static Pattern p = Pattern.compile("history = delete file - user:(.+) time:(.+) state:(.+) format:(.+) file:(.*)");
     private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy H:m:s a");
 
+
+    @Getter
+    private final String localizedName="Удаление";
+    @Getter
     private final String name = "DeleteFile";
+    @Getter
     private String user;
+    @Getter
     private Date time;
+    @Getter
     private State state;
+    @Getter
     private String format;
+    @Getter
     private String file;
 
     public DeleteFile(String parsableString) throws IllegalArgumentException{
@@ -36,43 +48,5 @@ public class DeleteFile extends HistoryAction {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 
-    @Override
-    public String getUser() {
-        return user;
-    }
-
-    @Override
-    public Date getTime() {
-        return time;
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    @Override
-    public String toString() {
-        return "DeleteFile{" +
-                "name='" + name + '\'' +
-                ", user='" + user + '\'' +
-                ", time=" + simpleDateFormat.format(time)+
-                ", state=" + state +
-                ", format='" + format + '\'' +
-                ", file='" + file + '\'' +
-                '}';
-    }
 }

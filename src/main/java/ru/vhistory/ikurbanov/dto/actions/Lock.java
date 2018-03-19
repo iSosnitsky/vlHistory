@@ -1,5 +1,7 @@
 package ru.vhistory.ikurbanov.dto.actions;
 
+import lombok.Getter;
+import lombok.ToString;
 import ru.vhistory.ikurbanov.constant.State;
 
 import java.text.ParseException;
@@ -8,12 +10,20 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@ToString
 public class Lock extends HistoryAction {
     private static Pattern p = Pattern.compile("history = lock - user:(.+) time:(.+)state:(.+)");
     private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M/d/yyyy H:m:s a");
+
+    @Getter
+    private final String localizedName="Блокировка";
+    @Getter
     private String name = "Lock";
+    @Getter
     private String user;
+    @Getter
     private Date time;
+    @Getter
     private State state;
 
     public Lock(String parsableString) throws IllegalArgumentException{
@@ -29,35 +39,5 @@ public class Lock extends HistoryAction {
         } else {
             throw new IllegalArgumentException("Unable to map String: "+parsableString+" to object:"+ this.name);
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getUser() {
-        return user;
-    }
-
-    @Override
-    public Date getTime() {
-        return time;
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
-    @Override
-    public String toString() {
-        return "Lock{" +
-                "name='" + name + '\'' +
-                ", user='" + user + '\'' +
-                ", time=" + simpleDateFormat.format(time )+
-                ", state=" + state +
-                '}';
     }
 }

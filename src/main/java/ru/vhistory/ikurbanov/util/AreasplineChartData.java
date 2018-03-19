@@ -44,9 +44,7 @@ public class AreasplineChartData {
                 .filter(x-> periodBegin.before(x.getTime()) && periodEnd.after(x.getTime()))
                 .filter(x-> actions.contains(x.getName()))
                 .filter(x-> users.contains(x.getUser()))
-//                .collect(Collectors.groupingBy(historyAction -> LocalDate.parse(simpleDateFormat.format(historyAction.getTime()))));
         .collect(Collectors.groupingBy(historyAction -> formatDate(historyAction.getTime(), generalizePeriod)));
-
 
         Map<String,List<Integer>> mapSeries = new HashMap<String, List<Integer>>();
         users.forEach(x-> mapSeries.put(x,new ArrayList<Integer>()));

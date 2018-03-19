@@ -10,5 +10,6 @@ public abstract class HistoryAction {
     public abstract String getUser();
     public abstract Date getTime();
     public abstract State getState();
+    public abstract String getLocalizedName();
 
 }

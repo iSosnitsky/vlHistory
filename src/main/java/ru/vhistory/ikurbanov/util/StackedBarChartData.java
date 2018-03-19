@@ -61,7 +61,6 @@ public class StackedBarChartData {
     }
 
     private static Date roundDate(Date date){
-        //TODO: Округление до 5 секунд
         return new Date(date.getTime()- (date.getTime()%5000));
     }
 
